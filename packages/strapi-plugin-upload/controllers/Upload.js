@@ -18,9 +18,7 @@ module.exports = {
     // Verify if the file upload is enable.
     if (enabled === false) {
       throw strapi.errors.badRequest(null, {
-        errors: [
-          { id: 'Upload.status.disabled', message: 'File upload is disabled' },
-        ],
+        errors: [{ id: 'Upload.status.disabled', message: 'File upload is disabled' }],
       });
     }
 
@@ -97,6 +95,12 @@ module.exports = {
     const data = await validateSettings(ctx.request.body);
 
     await configurator.set({ key: 'settings', value: data });
+
+    ctx.body = { data };
+  },
+
+  async getMediaTypes(ctx) {
+    const data = _.get(strapi.plugins.upload, 'config.mediaTypes');
 
     ctx.body = { data };
   },

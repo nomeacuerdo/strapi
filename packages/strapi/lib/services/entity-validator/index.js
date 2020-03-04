@@ -45,10 +45,19 @@ module.exports = ({ strapi }) => ({
   },
 });
 
+const isMedia = attr => {
+  return (attr.collection || attr.model) === 'file' && attr.plugin === 'upload';
+};
+
 const createValidator = model => {
   return yup
     .object(
       _.mapValues(model.attributes, attr => {
+        console.log(attr);
+        if (isMedia(attr)) {
+          return yup.mixed().nullable();
+        }
+
         const { required } = attr;
 
         const validator = createAttributeValidator(attr).nullable();
@@ -67,6 +76,11 @@ const createUpdateValidator = model => {
   return yup
     .object(
       _.mapValues(model.attributes, attr => {
+        console.log(attr);
+        if (isMedia(attr)) {
+          return yup.mixed().nullable();
+        }
+
         const { required } = attr;
 
         const validator = createAttributeValidator(attr).nullable();
